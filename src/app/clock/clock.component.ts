@@ -18,7 +18,7 @@ export class ClockComponent implements OnInit, AfterViewInit {
   startSeconds: number;
   interval: any;
 
-  constructor(private windowRef: WindowRef) { }
+  constructor() { }
 
   ngOnInit() {
     const hours = 0;
@@ -38,28 +38,9 @@ export class ClockComponent implements OnInit, AfterViewInit {
   }
 
 
-  start() {
-    let t = this.startSeconds;
-    this.time = this.convert(t);
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-      t--;
-      if (t) {
-        this.time = this.convert(t);
-      } else {
-        this.time = '00:00:00';
-        clearInterval(this.interval);
-      }
-    }, 1000);
-  }
 
-  convert(seconds): string {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds - h * 3600) / 60);
-    const s = Math.floor(seconds - h * 3600 - m * 60);
 
-    return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
-  }
+
 
   // private draw(now)
   // {
