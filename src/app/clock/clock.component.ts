@@ -1,3 +1,4 @@
+import { ClockGeneratorService } from './clock-generator.service';
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { WindowRef } from './window-ref.service';
 import { Subject, BehaviorSubject, interval, Observable } from 'rxjs';
@@ -10,15 +11,14 @@ import { delay, share, map } from 'rxjs/operators';
 })
 export class ClockComponent implements OnInit, AfterViewInit {
 
-  // @ViewChild('canvas', {read: ElementRef}) canvas: ElementRef;
-  // ctx: CanvasRenderingContext2D;
-  // c: HTMLCanvasElement;
+  @ViewChild('canvas', {read: ElementRef}) canvas: ElementRef;
+  ctx: CanvasRenderingContext2D;
 
   time: string;
   startSeconds: number;
   interval: any;
 
-  constructor() { }
+  constructor(private clock: ClockGeneratorService) { }
 
   ngOnInit() {
     const hours = 0;
@@ -29,81 +29,17 @@ export class ClockComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // this.c = <HTMLCanvasElement>this.canvas.nativeElement;
-    // this.ctx = this.c.getContext('2d');
-    // this.c.width = document.documentElement.clientWidth - 35;
-    // this.c.height = document.documentElement.clientHeight - 45;
-    // //this.draw(new Date());
-    // //this.windowRef.nativeWindow.requestAnimationFrame(this.draw);
+    this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
 
+  start() {
+    const h = 0;
+    const m = 0;
+    const s = 15;
 
-
-
-
-  // private draw(now)
-  // {
-  //   var min, sec, hr, ms, amOrPm = 'AM';
-  //   var radH, radM, radS;
-  //   const threePIByTwo = (3 * Math.PI) / 2;
-
-  //   var centerX = this.c.width / 2,
-  //       centerY = this.c.height / 2,
-  //       date = new Date();
-
-  //   sec = date.getSeconds();
-  //   ms = date.getMilliseconds();
-
-  //   radS = 0.006 * ( ( sec * 1000 ) + ms );
-
-  //   this.drawCircle(centerX, centerY, 220, 0, Math.PI * 2, false, '#eeeeee', 'stroke', 50); //secondgrey
-  //   this.drawCircle(centerX, centerY, 220, threePIByTwo, this.rad(radS) + threePIByTwo, false, '#DC543E', 'stroke', 50); //second
-  //   this.windowRef.nativeWindow.requestAnimationFrame(this.draw);
-  // }
-
-  // private rad(deg){
-  //   return  (Math.PI / 180) * deg;
-  // }
-
-  // private drawText(text, x, y, color, size) {
-  //   this.ctx.font = `${size} "Passion One"`;
-  //   this.ctx.fillStyle = color;
-  //   this.ctx.fillText(text, x, y);
-  // }
-
-  // private drawRect(x, y, width, height, color) {
-  //   this.ctx.fillStyle = color;
-  //   this.ctx.fillRect(x, y, width, height);
-  // }
-
-  // private drawArc(x, y, radius, start, end, clockwise)
-  // {
-  //   this.ctx.beginPath();
-  //   this.ctx.arc(x, y, radius, start, end, clockwise);
-  // }
-
-  // private drawCircle(x, y, radius, start, end, clockwise, color, type, thickness) {
-  //   if(type == 'fill')
-  //   {
-  //     this.ctx.fillStyle = color;
-  //     this.drawArc(x, y, radius, start, end, clockwise)
-  //     this.ctx.fill();
-  //   }
-  //   else if(type == 'stroke')
-  //   {
-  //     this.ctx.strokeStyle = color;
-  //     this.ctx.lineWidth = thickness;
-  //     this.drawArc(x, y, radius, start, end, clockwise)
-  //     this.ctx.stroke();
-  //   }
-  // }
-
-
-
-
-
-
-
-
+    this.clock.clock$.subscribe(element => this.time = this.clock.show(element));
+    this.clock.init(this.ctx);
+    this.clock.start(h, m, s);
+  }
 }

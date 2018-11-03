@@ -41,8 +41,8 @@ describe('ArcGeneratorService', () => {
 
     const startRadian = 1.5 * Math.PI;
 
-
-    service.drawArc(contextSpy, 1000, 10, options);
+    service.init(contextSpy);
+    service.drawArc(1000, 10, options);
 
     expect(contextSpy.beginPath).toHaveBeenCalledTimes(2);
     expect(contextSpy.stroke).toHaveBeenCalledTimes(2);
@@ -68,14 +68,17 @@ describe('ArcGeneratorService', () => {
       lineWidth: 15
     };
 
-    expect(() => service.drawArc(null, 1000, 13, options)).toThrowError();
+    expect(() => service.drawArc(1000, 13, options)).toThrowError();
   });
 
   it('should throw exception when required drawing options are empty', () => {
     const service: ClockArcGeneratorService = TestBed.get(ClockArcGeneratorService);
-    const canvasSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['arc']);
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['arc']);
 
-    expect(() => service.drawArc(canvasSpy, 1000, 13, null)).toThrowError();
+    expect(() => {
+      service.init(contextSpy);
+      service.drawArc(1000, 13, null);
+    }).toThrowError();
   });
 
 });

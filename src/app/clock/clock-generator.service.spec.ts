@@ -3,7 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { ClockGeneratorService } from './clock-generator.service';
 
 describe('ClockGeneratorService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    jasmine.clock().uninstall();
+    jasmine.clock().install();
+  });
+
+  afterEach(() => jasmine.clock().uninstall());
 
   it('should be created', () => {
     const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
@@ -12,23 +18,44 @@ describe('ClockGeneratorService', () => {
 
   it('should decrement timer after calling #start()', () => {
     const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
-    jasmine.clock().install();
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['stroke', 'arc', 'beginPath' ]);
+
     let time = 0;
     service.clock$.subscribe(element => {
       time = element;
     });
+    service.init(contextSpy);
     service.start(0, 0, 4);
     jasmine.clock().tick(1001);
 
     expect(time).toEqual(3);
 
-    jasmine.clock().uninstall();
+  });
+
+  it('should draw arc after calling #start()', () => {
+    const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['stroke', 'arc', 'beginPath' ]);
+
+    let time = 0;
+    service.clock$.subscribe(element => {
+      time = element;
+    });
+    service.init(contextSpy);
+    service.start(0, 0, 1);
+    jasmine.clock().tick(1001);
+
+    expect(contextSpy.stroke).toHaveBeenCalledTimes(2);
   });
 
   it('should clearInterval after calling #start()', () => {
     spyOn(window, 'clearInterval');
     const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['stroke', 'arc', 'beginPath', ]);
+
+    service.init(contextSpy);
     service.start(0, 0, 1);
+
+    jasmine.clock().tick(1001);
     expect(window.clearInterval).toHaveBeenCalled();
   });
 
@@ -39,17 +66,18 @@ describe('ClockGeneratorService', () => {
 
   it('should end timer with 0 after 15s from calling #start()', () => {
     const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
-    jasmine.clock().install();
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['stroke', 'arc', 'beginPath', ]);
+
     let time = 0;
     service.clock$.subscribe(element => {
       time = element;
     });
+    service.init(contextSpy);
     service.start(0, 0, 15);
     jasmine.clock().tick(15001);
 
     expect(0).toEqual(0);
 
-    jasmine.clock().uninstall();
   });
 
   it('should end timer after calling #stop()', () => {
@@ -67,11 +95,13 @@ describe('ClockGeneratorService', () => {
 
   it('should reset timer when #start() called second time after few seconds', () => {
     const service: ClockGeneratorService = TestBed.get(ClockGeneratorService);
-    jasmine.clock().install();
+    const contextSpy = jasmine.createSpyObj('CanvasRenderingContext2D', ['stroke', 'arc', 'beginPath', ]);
+
     let time = 0;
     service.clock$.subscribe(element => {
       time = element;
     });
+    service.init(contextSpy);
     service.start(0, 0, 15);
     jasmine.clock().tick(13001);
 
@@ -80,6 +110,13 @@ describe('ClockGeneratorService', () => {
 
     expect(time).toEqual(19);
 
-    jasmine.clock().uninstall();
+  });
+
+  it('should pause timer when #pause() is called', () => {
+    fail();
+  });
+
+  it('should continue when calling #start() after #pause() was called', () => {
+    fail();
   });
 });

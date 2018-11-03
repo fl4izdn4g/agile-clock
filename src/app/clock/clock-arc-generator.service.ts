@@ -21,43 +21,52 @@ export class ClockArcGeneratorService {
     return  1.5 * Math.PI;
   }
 
+  private initialized = false;
+  private context: CanvasRenderingContext2D;
+
   constructor() { }
+
+  public init(context: CanvasRenderingContext2D) {
+    this.context = context;
+    this.initialized = true;
+  }
 
   toRadian(totalSeconds: number, currentSecond: number): number {
     const oneSecond = (2 / totalSeconds) * Math.PI;
     return currentSecond * oneSecond;
   }
 
-  drawArc(context: CanvasRenderingContext2D, totalSeconds: number, currentSeconds: number, options: ArcOptions) {
-    if (!context) {
-      throw new Error('Canvas Context does not exist');
+  drawArc(totalSeconds: number, currentSeconds: number, options: ArcOptions) {
+    if (!this.initialized) {
+      throw new Error('Context not initialized');
     }
+
     if (!options) {
       throw new Error('Options uninitialized');
     }
 
-    context.beginPath();
-    context.arc(
+    this.context.beginPath();
+    this.context.arc(
       options.x,
       options.y,
       options.radius,
       0,
       2 * Math.PI
     );
-    context.strokeStyle = options.stroke.background;
-    context.lineWidth = options.lineWidth;
-    context.stroke();
+    this.context.strokeStyle = options.stroke.background;
+    this.context.lineWidth = options.lineWidth;
+    this.context.stroke();
 
-    context.beginPath();
-    context.arc(
+    this.context.beginPath();
+    this.context.arc(
       options.x,
       options.y,
       options.radius,
       this.startRadian, this.startRadian - this.toRadian(totalSeconds, currentSeconds)
     );
-    context.strokeStyle = options.stroke.color;
-    context.lineWidth = options.lineWidth;
-    context.stroke();
+    this.context.strokeStyle = options.stroke.color;
+    this.context.lineWidth = options.lineWidth;
+    this.context.stroke();
   }
 
 }
