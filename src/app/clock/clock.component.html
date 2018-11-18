@@ -1,4 +1,17 @@
-<canvas #canvas></canvas>
-
-<p>{{time}}</p>
-<button (click)="start()">Start</button>
+<div *ngIf="setupVisible" class="setup-container">
+  <form [formGroup]="timeForm" (ngSubmit)="onSubmit()">
+    <div class="time-form">
+      <input type="number" formControlName="hours" min="0" max="23" required/>
+      <span>:</span>
+      <input type="number" formControlName="minutes" min="0" max="59" required/>
+      <span>:</span>
+      <input type="number" formControlName="seconds" min="0" max="59" required/>
+    </div>
+    <button class="start button" type="submit" [disabled]="!timeForm.valid"><fa-icon [icon]="iconStart"></fa-icon></button>
+  </form>
+</div>
+<button (click)="toggleSetup()" class="button"><fa-icon [icon]="iconCogs"></fa-icon></button>
+<div class="clock-box">
+  <div class="timer">{{time}}</div>
+  <div #clock class="clock"></div>
+</div>

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ClockArcGeneratorService, ArcOptions } from './clock-arc-generator.service';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -9,41 +7,28 @@ export class ClockGeneratorService {
 
   private startingSeconds: number;
   private interval: any;
-  private context: CanvasRenderingContext2D;
+  private context: any;
 
   private _clock$ = new Subject<number>();
   get clock$(): Subject<number> {
     return this._clock$;
   }
 
-  constructor(private arcGenerator: ClockArcGeneratorService) { }
+  constructor() { }
 
-  init(context: CanvasRenderingContext2D) {
-    this.context = context;
-  }
-
-  start(hours: number, minutes: number, seconds: number) {
-    this.startingSeconds = hours * 3600 + minutes * 60 + seconds;
-
-    this.arcGenerator.init(this.context);
-    const options: ArcOptions = {
-      x: 70,
-      y: 70,
-      radius: 50,
-      stroke: {
-        background: '#dddddd',
-        color: '#ff0000'
-      },
-      lineWidth: 15
-    };
+  start(startingSeconds) {
+    if (startingSeconds === 0) {
+      return startingSeconds;
+    }
+    this.startingSeconds = startingSeconds;
 
     let time = this.startingSeconds;
     this._clock$.next(time);
     clearInterval(this.interval);
     this.interval = setInterval(() => {
       time = this.decreaseTime(time);
-      this.arcGenerator.drawArc(this.startingSeconds, time, options);
     }, 1000);
+    return this.startingSeconds;
   }
 
   stop() {

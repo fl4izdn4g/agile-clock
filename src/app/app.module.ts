@@ -3,17 +3,22 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ClockComponent } from './clock/clock.component';
-import { WindowRef } from './clock/window-ref.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ClockComponent
+    ClockComponent,
+
   ],
   imports: [
-    BrowserModule
+    ReactiveFormsModule,
+    BrowserModule,
+    FontAwesomeModule
   ],
-  providers: [WindowRef],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
