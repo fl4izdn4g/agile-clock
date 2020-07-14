@@ -1,6 +1,5 @@
 import { Injectable,  ElementRef } from '@angular/core';
 import * as d3 from 'd3';
-import { element } from '@angular/core/src/render3';
 
 @Injectable({
   providedIn:  'root'
