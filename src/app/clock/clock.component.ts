@@ -14,7 +14,7 @@ import { ValidTimeValidator } from './valid-time.validator';
   styleUrls: ['./clock.component.css']
 })
 export class ClockComponent implements OnInit {
-  @ViewChild('clock')
+  @ViewChild('clock', { static: true })
   chartElement: ElementRef;
 
   time: string;

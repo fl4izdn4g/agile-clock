@@ -41,3 +41,6 @@ Thumbs.db
 # docker
 docker-compose.yml
 dock-console.sh
+
+#devcontainers
+.devcontainer
